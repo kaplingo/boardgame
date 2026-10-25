@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#f5faf8"/>
+<title>Türkçe Yolculuğu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#1d3d50;--teal:#058d92;--pale:#eff8f5;--shadow:0 20px 60px #174c5930}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Nunito,system-ui,-apple-system,sans-serif;color:var(--ink)}
+body{background:radial-gradient(ellipse at 3% 10%,#dff9ef,transparent 40%),radial-gradient(ellipse at 98% 95%,#ffe8d8,transparent 39%),#f6f9f8}
+button{font:inherit;cursor:pointer}button:disabled{cursor:default;opacity:.65}
+.app{max-width:1700px;min-height:100dvh;margin:0 auto;padding:clamp(10px,1.5vw,22px);display:flex;flex-direction:column;gap:14px}
+.top{display:flex;align-items:center;justify-content:center;min-height:46px}
+h1{font-size:clamp(23px,2.2vw,36px);font-weight:900;letter-spacing:-1px;margin:0;text-align:center}
+.main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(115px,15vw,210px);gap:clamp(8px,1.2vw,18px);align-items:stretch}
+.boardCard{background:white;border:1px solid #e0eae7;border-radius:clamp(18px,2vw,30px);box-shadow:var(--shadow);min-width:0;display:flex;align-items:center;justify-content:center;padding:clamp(2px,.6vw,12px)}
+.boardWrap{width:100%;display:flex;align-items:center;justify-content:center;min-width:0;overflow:hidden}
+.boardWrap svg{display:block;width:100%;height:auto;max-height:calc(100dvh - 100px);overflow:visible}
+.dicePanel{display:flex;justify-content:center;align-items:center;min-width:0}
+.dice{position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);align-items:center;justify-items:center;gap:5px;width:clamp(95px,11vw,155px);height:clamp(95px,11vw,155px);padding:clamp(13px,1.8vw,24px);background:linear-gradient(142deg,#fff 3%,#f4fffc 38%,#d4f1ed 100%);border:4px solid #fff;border-radius:25%;box-shadow:0 11px 0 #acd8d4,0 22px 32px #0b6c7238,inset 3px 4px 8px #ffffff;transform:rotate(-9deg);transition:transform .18s,box-shadow .18s;touch-action:manipulation}
+.dice:focus-visible{outline:4px solid #ef9476;outline-offset:7px}
+.dice:not(:disabled):hover{transform:rotate(-4deg) translateY(-3px);box-shadow:0 14px 0 #acd8d4,0 25px 32px #0b6c7238}
+.dice:not(:disabled):active{transform:rotate(-2deg) translateY(8px);box-shadow:0 3px 0 #acd8d4,0 7px 15px #0b6c7238}
+.dice.rolling{animation:roll .13s linear infinite alternate}
+@keyframes roll{from{transform:rotate(-23deg) scale(1.06)}to{transform:rotate(22deg) scale(.95)}}
+.pip{display:block;width:clamp(12px,1.5vw,20px);height:clamp(12px,1.5vw,20px);background:#087e87;border-radius:50%;opacity:0;box-shadow:inset 2px 2px 1px #005a62}
+.dice[data-value="1"] .pip:nth-child(5),.dice[data-value="2"] .pip:nth-child(1),.dice[data-value="2"] .pip:nth-child(9),.dice[data-value="3"] .pip:nth-child(1),.dice[data-value="3"] .pip:nth-child(5),.dice[data-value="3"] .pip:nth-child(9),.dice[data-value="4"] .pip:nth-child(1),.dice[data-value="4"] .pip:nth-child(3),.dice[data-value="4"] .pip:nth-child(7),.dice[data-value="4"] .pip:nth-child(9),.dice[data-value="5"] .pip:nth-child(1),.dice[data-value="5"] .pip:nth-child(3),.dice[data-value="5"] .pip:nth-child(5),.dice[data-value="5"] .pip:nth-child(7),.dice[data-value="5"] .pip:nth-child(9),.dice[data-value="6"] .pip:nth-child(1),.dice[data-value="6"] .pip:nth-child(3),.dice[data-value="6"] .pip:nth-child(4),.dice[data-value="6"] .pip:nth-child(6),.dice[data-value="6"] .pip:nth-child(7),.dice[data-value="6"] .pip:nth-child(9){opacity:1}
+.overlay{position:fixed;inset:0;display:grid;place-items:center;background:#173b4e85;backdrop-filter:blur(9px);z-index:10;padding:20px}
+.overlay[hidden]{display:none}
+.modal{width:min(92vw,610px);background:#fffdf8;border:4px solid white;border-radius:30px;box-shadow:0 26px 80px #15384755;padding:clamp(24px,4vw,44px);text-align:center;animation:pop .27s ease-out}
+@keyframes pop{from{transform:scale(.92);opacity:.5}to{transform:scale(1);opacity:1}}
+.modal h2{font-size:clamp(24px,3vw,36px);line-height:1.36;letter-spacing:-.5px;margin:0 0 30px;font-weight:900;overflow-wrap:anywhere}
+.primary{display:inline-flex;justify-content:center;align-items:center;min-width:min(100%,250px);min-height:62px;border:0;border-radius:20px;background:linear-gradient(150deg,#13b7b1,#078b93 65%,#006f7a);color:#fff;font-weight:900;font-size:clamp(19px,2.4vw,24px);padding:13px 26px;box-shadow:0 7px 0 #006a73,0 15px 25px #087b8635;transition:transform .15s,box-shadow .15s}
+.primary:active{transform:translateY(6px);box-shadow:0 1px 0 #006a73,0 6px 12px #087b8635}
+.overlay.splash .modal{background:transparent;border:0;box-shadow:none;padding:0;animation:none}
+.overlay.splash .primary{min-width:250px;min-height:78px;font-size:29px;border-radius:24px}
+@media(max-width:850px){.main{grid-template-columns:minmax(0,1fr) 115px}.boardWrap svg{max-height:calc(100dvh - 95px)}.dice{width:98px;height:98px;padding:13px;gap:2px}.pip{width:12px;height:12px}}
+@media(max-width:600px){.app{gap:6px;padding:9px}.top{min-height:38px}h1{font-size:25px}.main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) 100px;gap:5px}.boardCard{padding:3px;border-radius:19px}.boardWrap svg{max-height:calc(100dvh - 180px)}.dicePanel{align-items:center}.dice{width:76px;height:76px;padding:10px;border-width:3px;border-radius:21%;box-shadow:0 6px 0 #acd8d4,0 12px 20px #0b6c7238}.pip{width:10px;height:10px}.modal{padding:25px 18px}.modal h2{font-size:25px}.primary{min-height:57px}}
+@media(max-height:580px) and (min-width:601px){.top{min-height:28px}h1{font-size:22px}.boardWrap svg{max-height:calc(100dvh - 74px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><h1>Türkçe Yolculuğu</h1></header>
+<main class="main">
+<section class="boardCard"><div class="boardWrap"><svg id="board" viewBox="24 61 1050 602" role="img" aria-label="Başlangıçtan 47. kareye kadar uzanan kare kutucuklu oyun tahtası"><defs><linearGradient id="road" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e0f3ef"/><stop offset="1" stop-color="#dceaf3"/></linearGradient><filter id="tokenShadow" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#123b48" flood-opacity=".3"/></filter></defs><path id="route" d="M 140 115 L 930 115 Q 1025 115 1025 205 Q 1025 285 925 285 L 160 285 Q 70 285 70 370 Q 70 455 160 455 L 930 455 Q 1025 455 1025 535 Q 1025 610 930 610 L 170 610" fill="none" stroke="url(#road)" stroke-width="84" stroke-linecap="round" stroke-linejoin="round"/><path d="M 140 115 L 930 115 Q 1025 115 1025 205 Q 1025 285 925 285 L 160 285 Q 70 285 70 370 Q 70 455 160 455 L 930 455 Q 1025 455 1025 535 Q 1025 610 930 610 L 170 610" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="10 14" opacity=".85"/><g id="spaces"></g><g id="playerToken" filter="url(#tokenShadow)"><circle r="26" fill="#fff" stroke="#f3b34f" stroke-width="6"/><circle r="17" fill="#f08065"/><path d="M -6 -4 L 0 6 L 8 -8" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div></section>
+<aside class="dicePanel"><button type="button" class="dice" data-value="5" id="dice" aria-label="Zar at" title="Zar at" disabled><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i></button></aside>
+</main></div>
+<div class="overlay splash" id="overlay"><div class="modal" id="modal" role="dialog" aria-modal="true"><button type="button" class="primary" id="modalButton">BAŞLA</button></div></div>
+<script>
+'use strict';
+const spaces=[
+{q:'Hafta sonlarını genellikle nasıl geçiriyorsun? Geçen hafta sonun farklı mıydı?'},
+{q:'Her gün en çok hangi uygulamayı kullanıyorsun? Ne için kullanıyorsun?'},
+{type:'move',n:2,q:'İki kare ilerle!'},
+{q:'Günün en sevdiğin zamanı hangisi? Neden?'},
+{q:'Sabah erken kalkmak mı, geç yatmak mı? Hangisini tercih edersin?'},
+{q:'Evde yemek yapmayı sever misin? En iyi hangi yemeği yaparsın?'},
+{q:'Yoğun bir günün ardından dinlenmek için ne yaparsın?'},
+{type:'move',n:-1,q:'Bir kare geri git!'},
+{q:'Hayatında unutamadığın bir günü anlat.'},
+{q:'Çocukken en çok hangi oyunları oynardın?'},
+{q:'En son ne zaman yeni bir şey öğrendin? Neydi?'},
+{q:'İlkokulda en sevdiğin ders hangisiydi? Neden?'},
+{q:'Geçen hafta seni mutlu eden bir olay anlat.'},
+{q:'En son hangi restorana gittin? Ne yedin?'},
+{type:'move',n:-3,q:'Üç kare geri git!'},
+{type:'move',n:3,q:'Üç kare ilerle!'},
+{q:"Türkiye'de ziyaret etmek istediğin bir şehir var mı? Neden?"},
+{q:'Yaşadığın şehrin en güzel ve en zor yanları nelerdir?'},
+{q:'Bir turist senin şehrine gelse ona nereyi önerirsin?'},
+{q:'Tatil için deniz kenarını mı, dağları mı tercih edersin? Neden?'},
+{q:'Kendi ülkendeki bir geleneği anlat.'},
+{type:'move',n:-2,q:'İki kare geri git!'},
+{q:'Sence başka bir ülkede yaşamanın en zor yanı nedir?'},
+{q:'En sevdiğin Türk yemeği hangisi? İçinde neler var?'},
+{q:'Sence iyi bir arkadaşın en önemli üç özelliği nedir?'},
+{q:'Yeni insanlarla tanışmak senin için kolay mı, zor mu? Neden?'},
+{q:'Hafta sonu arkadaşlarınla genellikle nereye gidersin?'},
+{type:'move',n:-1,q:'Bir kare geri git!'},
+{q:'Bir arkadaşın üzgünse ona nasıl yardım edersin?'},
+{q:'Sosyal medyanın arkadaşlıklar üzerinde nasıl bir etkisi var?'},
+{type:'reroll',q:'Tekrar zar at!'},
+{q:'Çay mı, kahve mi? Hangisini daha çok seversin? Neden?'},
+{q:'Beş yıl sonra kendini nerede görüyorsun?'},
+{q:'Bir milyon liran olsa ilk ne satın alırdın?'},
+{type:'move',n:-1,q:'Bir kare geri git!'},
+{q:'Öğrenmek istediğin yeni bir beceri var mı? Neden?'},
+{q:'Gelecekte hangi ülkeyi ziyaret etmek istersin?'},
+{q:'Sence gelecekte insanlar daha az mı çalışacak, daha çok mu?'},
+{q:'Gelecek yaz tatilinde nereye gitmek istiyorsun?'},
+{type:'reroll',q:'Tekrar zar at!'},
+{q:'Para mı, boş zaman mı? Hangisi senin için daha önemli? Neden?'},
+{q:'Bir günlüğüne görünmez olsan ne yapardın?'},
+{q:'En son izlediğin film veya dizi hangisiydi? Beğendin mi? Neden?'},
+{q:'Sence büyük şehirde mi, küçük şehirde mi yaşamak daha güzel?'},
+{type:'move',n:3,q:'Üç kare ilerle!'},
+{q:'Hayatını kolaylaştıran bir teknolojik ürünü anlat.'},
+{q:'Son bir yılda seni en çok mutlu eden olay neydi?'}
+];
+const route=document.getElementById('route'),group=document.getElementById('spaces'),token=document.getElementById('playerToken'),dice=document.getElementById('dice'),overlay=document.getElementById('overlay'),modal=document.getElementById('modal');
+const ns='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const x=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))x.setAttribute(k,v);parent.appendChild(x);return x}
+let position=0,busy=false,started=false,modalAction=null;
+const coords=[];
+if(window.matchMedia('(max-width:600px)').matches){
+ const xs=[43,104,165,226,287,348];
+ for(let i=0;i<=47;i++){const row=Math.floor(i/6),col=i%6;coords.push({x:xs[row%2===0?col:5-col],y:70+row*75})}
+ const d='M '+coords.map(p=>`${p.x} ${p.y}`).join(' L ');
+ route.setAttribute('d',d);
+ route.setAttribute('stroke-width','48');
+ route.nextElementSibling.setAttribute('d',d);
+ document.getElementById('board').setAttribute('viewBox','0 0 390 670');
+}else{
+ const length=route.getTotalLength();
+ for(let i=0;i<=47;i++){const p=route.getPointAtLength(length*i/47);coords.push({x:p.x,y:p.y})}
+}
+for(let i=1;i<=47;i++){
+ const p=coords[i],special=!!spaces[i-1].type;
+ const fill=i===47?'#e7ad47':special?'#f08b6a':i%4===0?'#55b6a9':i%4===1?'#218b9b':i%4===2?'#5c91b7':'#9a83c4';
+ const item=el('g',{transform:`translate(${p.x} ${p.y})`},group);
+ const tileSize=window.matchMedia('(max-width:600px)').matches?52:59;
+ const half=tileSize/2;
+ el('rect',{x:-half-3,y:-half-1,width:tileSize+6,height:tileSize+7,rx:11,fill:'#23475b',opacity:.14},item);
+ el('rect',{x:-half,y:-half-3,width:tileSize,height:tileSize,rx:9,fill,stroke:'#fff','stroke-width':2.6},item);
+ el('path',{d:`M ${-half+10} ${-half+7} H ${half-10}` ,stroke:'#fff','stroke-width':3,'stroke-linecap':'round',opacity:.3},item);
+ const label=el('text',{x:0,y:8,'font-family':'Nunito, sans-serif','font-size':25,'font-weight':900,'text-anchor':'middle',fill:'#fff'},item);label.textContent=i;
+}
+const p0=coords[0],start=el('g',{transform:`translate(${p0.x} ${p0.y})`},group);
+el('rect',{x:-27,y:-27,width:54,height:54,rx:9,fill:'#fff',stroke:'#53b6a5','stroke-width':5},start);
+el('rect',{x:-11,y:-11,width:22,height:22,rx:5,fill:'#53b6a5'},start);
+function render(){const p=coords[position];token.setAttribute('transform',`translate(${p.x} ${p.y-1})`)}
+render();
+function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+function beep(freq=550){try{const A=window.AudioContext||window.webkitAudioContext;const ctx=beep.ctx||(beep.ctx=new A());if(ctx.state==='suspended')ctx.resume();const o=ctx.createOscillator(),gain=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(freq,ctx.currentTime);gain.gain.setValueAtTime(.035,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.12);o.connect(gain);gain.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.13)}catch(e){}}
+async function moveTo(dest){dest=Math.min(47,Math.max(0,dest));const direction=dest>=position?1:-1;while(position!==dest){position+=direction;render();beep(390+position*6);await sleep(125)}}
+function showCard(title,button,action){modalAction=action;overlay.classList.remove('splash');overlay.hidden=false;modal.innerHTML='';const h=document.createElement('h2');h.textContent=title;const b=document.createElement('button');b.type='button';b.className='primary';b.textContent=button;b.addEventListener('click',async()=>{if(!modalAction)return;const fn=modalAction;modalAction=null;overlay.hidden=true;await fn()});modal.append(h,b);b.focus()}
+function enableRoll(){busy=false;dice.disabled=false;dice.setAttribute('aria-label','Zar at')}
+function finish(){busy=false;dice.disabled=true;showCard('Tebrikler!','YENİDEN OYNA',resetGame)}
+function land(){
+ if(position===0){enableRoll();return}
+ const s=spaces[position-1];
+ if(!s.type){showCard(s.q,position===47?'BİTİR':'DEVAM',()=>position===47?finish():enableRoll());return}
+ if(s.type==='move'){showCard(s.q,'DEVAM',async()=>{await moveTo(position+s.n);land()});return}
+ if(s.type==='reroll'){showCard(s.q,'ZAR AT',enableRoll);return}
+}
+async function roll(){
+ if(busy||!started||modalAction)return;
+ busy=true;dice.disabled=true;dice.classList.add('rolling');
+ const value=1+Math.floor(Math.random()*6);
+ for(let i=0;i<12;i++){dice.dataset.value=1+Math.floor(Math.random()*6);await sleep(62)}
+ dice.dataset.value=value;dice.classList.remove('rolling');beep(790);
+ await sleep(230);await moveTo(position+value);land();
+}
+function resetGame(){position=0;busy=false;started=true;modalAction=null;overlay.hidden=true;dice.dataset.value=5;render();enableRoll()}
+dice.addEventListener('click',roll);
+document.getElementById('modalButton').addEventListener('click',resetGame);
+</script>
+</body></html>
